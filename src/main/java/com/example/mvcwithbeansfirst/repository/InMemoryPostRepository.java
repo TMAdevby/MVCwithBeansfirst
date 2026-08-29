@@ -1,21 +1,20 @@
 package com.example.mvcwithbeansfirst.repository;
 
 import com.example.mvcwithbeansfirst.model.Post;
-import org.springframework.stereotype.Repository;
-import jakarta.annotation.PostConstruct; // для Spring Boot 2.x используй javax.annotation.PostConstruct
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository // Делает класс бином Spring
+// ВАЖНО: здесь НЕТ аннотации @Repository!
+// Этот класс станет бином через @Bean в AppConfig
 public class InMemoryPostRepository implements PostRepository {
 
     private final List<Post> posts = new ArrayList<>();
     private Long currentId = 1L;
 
-    @PostConstruct // Вызывается Spring'ом СРАЗУ после создания бина
-    public void init() {
-        posts.add(new Post(currentId++, "Первый пост", "Изучаем Spring MVC"));
-        posts.add(new Post(currentId++, "Второй пост", "Разбираемся с бинами"));
+    public InMemoryPostRepository() {
+        // Инициализация прямо в конструкторе (альтернатива @PostConstruct)
+        posts.add(new Post(currentId++, "Первый пост", "Бины через @Bean"));
+        posts.add(new Post(currentId++, "Второй пост", "Конфигурация Spring"));
     }
 
     @Override
@@ -27,19 +26,9 @@ public class InMemoryPostRepository implements PostRepository {
     public Post save(Post post) {
         if (post.getId() == null) {
             post.setId(currentId++);
-            posts.add(post);
-        } else {
-            posts.removeIf(p -> p.getId().equals(post.getId()));
-            posts.add(post);
         }
+        posts.removeIf(p -> p.getId().equals(post.getId()));
+        posts.add(post);
         return post;
-    }
-
-    @Override
-    public Post findById(Long id) {
-        return posts.stream()
-                .filter(p -> p.getId().equals(id))
-                .findFirst()
-                .orElse(null);
     }
 }
