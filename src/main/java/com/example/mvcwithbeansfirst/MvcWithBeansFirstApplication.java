@@ -4,10 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MvCwithBeansfirstApplication {
-
+public class MvcWithBeansFirstApplication {
     public static void main(String[] args) {
-        SpringApplication.run(MvCwithBeansfirstApplication.class, args);
+        SpringApplication.run(MvcWithBeansFirstApplication.class, args);
     }
-
 }
